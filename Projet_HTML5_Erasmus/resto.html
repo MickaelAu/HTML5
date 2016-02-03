@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style>    
+        html { height: 100% }
+        body { height: 100%; margin: 0px; padding: 0px }
+        #macarte { width: 100%; height: 100% }
+     
+    </style>
+    <script src= "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+    <script src= "https://www.google.fr/maps/search/restaurant+angers/@47.469405,-0.6088295,14.25z"></script>
+    Find your favorite restaurant
+</head>
+
+<body onload="initialize()" class="left-sidebar">
+    
+    <div id= "macarte"></div> 
+
+    <script>
+// Je déclare ma variable
+
+var map;
+
+
+// J'initialise ma fonction 
+
+function initialize() {
+
+// Je définie les options de ma fonction
+
+  var mapOptions = {
+    zoom: 14
+  };
+
+// Je créé ma carte
+
+  map = new google.maps.Map(document.getElementById('macarte'),mapOptions);
+
+  // Je détermine ma fonction de géolocalisation en HTML5
+
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+      var infowindow = new google.maps.InfoWindow({
+        map: map,
+        position: pos,
+        content: 'Je suis là!'
+      });
+      
+      //création du marqueur
+      var marqueur = new google.maps.Marker({
+        position: new google.maps.LatLng(47.469405, -0.6088295),
+        map: map,
+        
+      });
+
+// Je demande à ce que la carte soit centrée sur ma position
+
+      map.setCenter(pos);
+    }, 
+
+// Je détermine comment doit agir la carte si la géolocalisation n'est pas possible
+
+function() {
+      handleNoGeolocation(true);
+    });
+  } else {
+    handleNoGeolocation(false);
+  }
+}
+
+function handleNoGeolocation(errorFlag) {
+  if (errorFlag) {
+    var content = 'Erreur: Le service de géolocalisation ne fonctionne pas.';
+  } else {
+    var content = 'Erreur: Votre navigateur ne supporte pas la géolocalisation.';
+  }
+  
+// Si la carte ne me géolocalise pas, elle va se positionner sur les points de latitude et longitude définis ci-dessous
+
+  var options = {
+    map: map,
+    position: new google.maps.LatLng(44.8333, 0.5667),
+    content: content
+  };
+
+  var infowindow = new google.maps.InfoWindow(options);
+  map.setCenter(options.position);
+}
+
+    // Je lance la fonction complète
+    
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+</body>
+
+</html>
